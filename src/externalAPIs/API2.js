@@ -18,26 +18,3 @@ const getRatings = (id) => {
 };
 
 module.exports = getRatings;
-
-api1().then((JSONdata) => {
-  const allBooks = JSONdata.books;
-  const arrayJK = [];
-  const arraySS = [];
-  const insertInArray = (book) => {
-    if (book.Author === 'J K Rowling') {
-      arrayJK.push(book);
-    } else {
-      arraySS.push(book);
-    }
-  };
-  const insertRating =  (insertInArray) => {
-    allBooks.forEach((book) => {
-      getRatings(String(book.id)).then((bookRating) => {
-        book['rating'] = bookRating.rating;
-        return book;
-      }).then((book) => {
-        insertInArray(book);
-      });
-    });
-  };
-});
