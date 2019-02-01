@@ -1,16 +1,24 @@
-const request = require('request');
+const https = require('https');
 
-const API1 = 'https://5gj1qvkc5h.execute-api.us-east-1.amazonaws.com/dev/allBooks';
+const url1 = 'https://5gj1qvkc5h.execute-api.us-east-1.amazonaws.com/dev/allBooks';
 
-let dataReceived;
 
-const getData = () => {
-  request(API1, { json: true }, (err, res, body) => {
-    if (err) {
-      return console.log(err);
-    }
-    dataReceived = body;
-    console.log(dataReceived);
+const httpGet = () => {
+  return new Promise((resolve, reject) => {
+    https.get(url1, (res) => {
+      res.setEncoding('utf8');
+      let rawData = '';
+      res.on('data', (chunk) => { rawData += chunk; });
+      res.on('end', () => {
+        try {
+          const parsedData = JSON.parse(rawData);
+          resolve(parsedData);
+        } catch (e) {
+          console.error(e.message);
+        }
+      });
+    });
   });
 };
-getData();
+
+module.exports = httpGet;
